@@ -67,6 +67,7 @@ body {
     justify-content: end;
     font-size: calc(100% + 2vw);
     padding: var(--output-padding);
+    overflow: hidden;
 }
 
 .row > * {
