@@ -51,8 +51,66 @@ function removeLastChar(expression) {
 
 
 
-function clear() {
+function clearOutput() {
+    firstValue = 0;
+    secondValue = 0;
+    modifyingFirstValue = true;
+    modifiedSecondValue = false;
+    selectedOperator = '';
     outputText.textContent = '0';
+}
+
+function addDecimalSignToOutput() {
+    if(!outputText.textContent.match(/[.]/)) outputText.textContent += '.'; // Only adds if there isn't already a '.'
+}
+
+function removeLastCharFromOutput() {
+    if(outputText.textContent !== 0)  outputText.textContent = outputText.textContent.slice(0, -1); // Removes last char
+    if(outputText.textContent === '') outputText.textContent = '0';                                 // If nothing is left, add a '0'
+
+    updateValues();
+}
+
+function addNumberToOutput(number) {
+    if(outputText.textContent === '0') {
+        outputText.textContent = number;
+    } else if(selectedOperator !== '' && secondValue === 0) {
+        outputText.textContent = number;
+    } else {
+        outputText.textContent += number;
+    }
+    updateValues();
+}
+
+function selectOperator(operator) {
+    if(selectedOperator !== operator) {
+        selectedOperator = operator;
+        modifyingFirstValue = false;
+        console.log(operator);
+    }
+}
+
+function calculate() {
+    if(selectedOperator !== '' && modifiedSecondValue) {
+        outputText.textContent = operate(firstValue, selectedOperator, secondValue);
+        firstValue = outputText.textContent;
+        secondValue = 0;
+        modifyingFirstValue = true;
+        modifiedSecondValue = false;
+        selectedOperator = '';
+
+        console.log(firstValue + ' ' + secondValue);
+    }
+}
+
+function updateValues() {
+    if(modifyingFirstValue) {
+        firstValue = outputText.textContent;
+    } else {
+        secondValue = outputText.textContent;
+        modifiedSecondValue = true;
+    }
+    console.log(firstValue + ' ' + secondValue);
 }
 
 
@@ -65,35 +123,24 @@ const buttonNumbers = document.querySelectorAll('.number');
 const buttonOperators = document.querySelectorAll('.operator');
 const buttonEquals = document.querySelector('#equals');
 
-buttonClear.addEventListener('click', () => clear());
+let firstValue = 0;
+let secondValue = 0;
+let modifyingFirstValue = true;
+let modifiedSecondValue = false;
+let selectedOperator = '';
 
-buttonDecimal.addEventListener('click', () => {
-    if (!outputText.textContent.match('.')) outputText.textContent += '.';
-});
+buttonClear.addEventListener('click', () => clearOutput());
 
-buttonBackspace.addEventListener('click', () => {
-    if(outputText.textContent !== 0) outputText.textContent = removeLastChar(outputText.textContent);
-    if(outputText.textContent === '') outputText.textContent = '0';
-});
+buttonDecimal.addEventListener('click', () => addDecimalSignToOutput());
+
+buttonBackspace.addEventListener('click', () => removeLastCharFromOutput());
 
 buttonNumbers.forEach(number => {
-    number.addEventListener('click', () => {
-        if(outputText.textContent === '0') outputText.textContent = number.textContent;
-        else outputText.textContent += number.textContent;
-    });
+    number.addEventListener('click', () => addNumberToOutput(number.textContent));
 });
 
 buttonOperators.forEach(operator => {
-    operator.addEventListener('click', () => {
-        const text = outputText.textContent;
-
-        if(lastCharOperator(text)) {
-            outputText.textContent = removeLastChar(text) + operator.textContent;
-        } else {
-            if(containsOperator(text)) outputText.textContent = operate(text);
-            outputText.textContent += operator.textContent;
-        }
-    });
+    operator.addEventListener('click', () => selectOperator(operator.textContent));
 });
 
-buttonEquals.addEventListener('click', () => outputText.textContent = operate(outputText.textContent));
+buttonEquals.addEventListener('click', () => calculate());
