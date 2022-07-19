@@ -1,43 +1,38 @@
-function operate(expression) {
-    const numbers = expression.split(/[+-/x%]/);
-    const operator = expression.replace(/[0-9]/g, '');
+function operate(number1, operator, number2) {
     switch(operator) {
         case '+':
-            return add(numbers);
+            return add(number1, number2);
         case '-':
-            return subtract(numbers);
+            return subtract(number1, number2);
         case 'x':
-            return multiply(numbers);
+            return multiply(number1, number2);
         case '/':
-            return divide(numbers);
+            return divide(number1, number2);
         case '%':
-            return modulu(numbers);
+            return modulu(number1, number2);
         default:
-            return expression;
+            return 'ERROR: Wrong operator';
     }
 }
 
-function add(numberArray) {
-    return +numberArray[0] + +numberArray[1];
+function add(number1, number2) {
+    return +number1 + +number2;
 }
 
-function subtract(numberArray) {
-    return +numberArray[0] - +numberArray[1];
+function subtract(number1, number2) {
+    return +number1 - +number2;
 }
 
-function multiply(numberArray) {
-    return +numberArray[0] * +numberArray[1];
+function multiply(number1, number2) {
+    return +number1 * +number2;
 }
 
-function divide(numberArray) {
-    if(numberArray[1] === 0) {
-        return 'ERROR: Division by 0';
-    }
-    return +numberArray[0] / +numberArray[1];
+function divide(number1, number2) {
+    return +number1 / +number2;
 }
 
-function modulu(numberArray) {
-    return +numberArray[0] % +numberArray[1];
+function modulu(number1, number2) {
+    return +number1 % +number2;
 }
 
 
