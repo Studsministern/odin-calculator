@@ -33,6 +33,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: var(--bg-color-main);
 }
 
 .calculator {
@@ -40,7 +41,7 @@ body {
     height: var(--calculator-height);
     display: flex;
 
-    box-shadow: 2px 2px 10px;
+    box-shadow: 2px 2px 10px var(--bg-color-modifier-operators);
     background-color: var(--bg-color-main);
 }
 
