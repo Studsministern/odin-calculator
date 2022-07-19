@@ -83,6 +83,12 @@ function addNumberToOutput(number) {
 }
 
 function selectOperator(operator) {
+    if(selectedOperator !== '' && modifiedSecondValue) {
+        calculate();
+        modifyingFirstValue = false;
+        selectedOperator = operator;
+    }
+    
     if(selectedOperator !== operator) {
         selectedOperator = operator;
         modifyingFirstValue = false;
