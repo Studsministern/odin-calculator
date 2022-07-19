@@ -64,6 +64,8 @@ function removeLastCharFromOutput() {
 function addNumberToOutput(number) {
     if(outputText.textContent === '0') {                        // Replaces a '0'
         outputText.textContent = number;
+    } else if(!modifiedFirstValue) {                            // If the change is the first that happens, it will replace the text
+        outputText.textContent = number;
     } else if(selectedOperator !== '' && secondValue === 0) {   // Replaces a reset secondValue when an operator has been chosen
         outputText.textContent = number;
     } else {                                                    // Will normally add a value
@@ -110,6 +112,7 @@ function calculationUpdates() {
     firstValue = outputText.textContent;
     secondValue = 0;
     modifyingFirstValue = true;
+    modifiedFirstValue = false;
     modifiedSecondValue = false;
     selectedOperator = '';
 
@@ -124,6 +127,7 @@ function resetLastValues() { // Resets saved values used in repeated equal calcu
 function updateValues() {
     if(modifyingFirstValue) {
         firstValue = outputText.textContent;
+        modifiedFirstValue = true;
     } else {
         secondValue = outputText.textContent;
         modifiedSecondValue = true;
@@ -155,6 +159,7 @@ const buttonEquals = document.querySelector('#equals');
 let firstValue = 0;
 let secondValue = 0;
 let modifyingFirstValue = true;
+let modifiedFirstValue = false;
 let modifiedSecondValue = false;
 let selectedOperator = '';
 
