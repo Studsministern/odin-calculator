@@ -58,6 +58,7 @@ function clearOutput() {
     modifiedSecondValue = false;
     selectedOperator = '';
     outputText.textContent = '0';
+    updateFontSize();
 }
 
 function addDecimalSignToOutput() {
@@ -104,6 +105,7 @@ function calculate() {
         modifyingFirstValue = true;
         modifiedSecondValue = false;
         selectedOperator = '';
+        updateFontSize();
 
         console.log(firstValue + ' ' + secondValue);
     }
@@ -116,7 +118,17 @@ function updateValues() {
         secondValue = outputText.textContent;
         modifiedSecondValue = true;
     }
+    updateFontSize();
     console.log(firstValue + ' ' + secondValue);
+}
+
+function updateFontSize() {
+    const length = outputText.textContent.length;
+    const fontSize = (50 * 12 / length) + 'px';
+
+    outputText.style.fontSize = (length <= 12) ? '50px' : fontSize;
+
+    outputText.style.fontSize = outputText.textContent.length
 }
 
 

@@ -65,7 +65,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: end;
-    font-size: calc(100% + 2vw);
+    font-size: 50px;
     padding: var(--output-padding);
     overflow: hidden;
 }
