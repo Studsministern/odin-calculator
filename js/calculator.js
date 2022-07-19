@@ -57,6 +57,8 @@ function clearOutput() {
     modifyingFirstValue = true;
     modifiedSecondValue = false;
     selectedOperator = '';
+    lastCalculationValue = 0;
+    lastCalculationOperator = '';
     outputText.textContent = '0';
     updateFontSize();
 }
@@ -81,34 +83,57 @@ function addNumberToOutput(number) {
         outputText.textContent += number;
     }
     updateValues();
+    resetLastValues();
 }
 
-function selectOperator(operator) {
+function selectOperator(operator) {    
     if(selectedOperator !== '' && modifiedSecondValue) {
         calculate();
         modifyingFirstValue = false;
         selectedOperator = operator;
     }
     
-    if(selectedOperator !== operator) {
+    if(selectedOperator !== operator) { // Update if a new operator is clicked
         selectedOperator = operator;
         modifyingFirstValue = false;
         console.log(operator);
     }
+
+    resetLastValues();
 }
 
 function calculate() {
     if(selectedOperator !== '' && modifiedSecondValue) {
         outputText.textContent = operate(firstValue, selectedOperator, secondValue);
+        
+        lastCalculationValue = secondValue;
+        lastCalculationOperator = selectedOperator;
+        
         firstValue = outputText.textContent;
         secondValue = 0;
         modifyingFirstValue = true;
         modifiedSecondValue = false;
         selectedOperator = '';
-        updateFontSize();
 
-        console.log(firstValue + ' ' + secondValue);
+        updateFontSize();
+    } else if(lastCalculationOperator !== '') {
+        outputText.textContent = operate(firstValue, lastCalculationOperator, lastCalculationValue);
+        
+        firstValue = outputText.textContent;
+        secondValue = 0;
+        modifyingFirstValue = true;
+        modifiedSecondValue = false;
+        selectedOperator = '';
+
+        updateFontSize();
     }
+
+    console.log(firstValue + ' ' + secondValue + ' ' + lastCalculationOperator);
+}
+
+function resetLastValues() {
+    lastCalculationOperator = '';
+    lastCalculationValue = 0;
 }
 
 function updateValues() {
@@ -146,6 +171,10 @@ let secondValue = 0;
 let modifyingFirstValue = true;
 let modifiedSecondValue = false;
 let selectedOperator = '';
+
+/* Needed for repeated equal presses */
+let lastCalculationValue = 0;
+let lastCalculationOperator = '';
 
 buttonClear.addEventListener('click', () => clearOutput());
 
