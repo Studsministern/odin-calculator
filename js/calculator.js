@@ -109,26 +109,24 @@ function calculate() {
         lastCalculationValue = secondValue;
         lastCalculationOperator = selectedOperator;
         
-        firstValue = outputText.textContent;
-        secondValue = 0;
-        modifyingFirstValue = true;
-        modifiedSecondValue = false;
-        selectedOperator = '';
-
-        updateFontSize();
+        calculationUpdates();
     } else if(lastCalculationOperator !== '') {
         outputText.textContent = operate(firstValue, lastCalculationOperator, lastCalculationValue);
         
-        firstValue = outputText.textContent;
-        secondValue = 0;
-        modifyingFirstValue = true;
-        modifiedSecondValue = false;
-        selectedOperator = '';
-
-        updateFontSize();
+        calculationUpdates();
     }
 
     console.log(firstValue + ' ' + secondValue + ' ' + lastCalculationOperator);
+}
+
+function calculationUpdates() {
+    firstValue = outputText.textContent;
+    secondValue = 0;
+    modifyingFirstValue = true;
+    modifiedSecondValue = false;
+    selectedOperator = '';
+
+    updateFontSize();
 }
 
 function resetLastValues() {
