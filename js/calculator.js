@@ -1,3 +1,4 @@
+/* Calculation functions */
 function operate(number1, operator, number2) {
     switch(operator) {
         case '+':
@@ -36,21 +37,7 @@ function modulu(number1, number2) {
 }
 
 
-
-function lastCharOperator(expression) {
-    return containsOperator(expression.slice(-1));
-}
-
-function containsOperator(expression) {
-    return expression.match(/[+-/x%]/);
-}
-
-function removeLastChar(expression) {
-    return expression.slice(0, -1);
-}
-
-
-
+/* Button press functions */
 function clearOutput() {
     firstValue = 0;
     secondValue = 0;
@@ -75,11 +62,11 @@ function removeLastCharFromOutput() {
 }
 
 function addNumberToOutput(number) {
-    if(outputText.textContent === '0') {
+    if(outputText.textContent === '0') {                        // Replaces a '0'
         outputText.textContent = number;
-    } else if(selectedOperator !== '' && secondValue === 0) {
+    } else if(selectedOperator !== '' && secondValue === 0) {   // Replaces a reset secondValue when an operator has been chosen
         outputText.textContent = number;
-    } else {
+    } else {                                                    // Will normally add a value
         outputText.textContent += number;
     }
     updateValues();
@@ -87,7 +74,7 @@ function addNumberToOutput(number) {
 }
 
 function selectOperator(operator) {    
-    if(selectedOperator !== '' && modifiedSecondValue) {
+    if(selectedOperator !== '' && modifiedSecondValue) { // Chained operators
         calculate();
         modifyingFirstValue = false;
         selectedOperator = operator;
@@ -103,14 +90,14 @@ function selectOperator(operator) {
 }
 
 function calculate() {
-    if(selectedOperator !== '' && modifiedSecondValue) {
+    if(selectedOperator !== '' && modifiedSecondValue) { // Normal calculation when operator and values have been chosen
         outputText.textContent = operate(firstValue, selectedOperator, secondValue);
         
         lastCalculationValue = secondValue;
         lastCalculationOperator = selectedOperator;
         
         calculationUpdates();
-    } else if(lastCalculationOperator !== '') {
+    } else if(lastCalculationOperator !== '') { // Repeated equal calculation
         outputText.textContent = operate(firstValue, lastCalculationOperator, lastCalculationValue);
         
         calculationUpdates();
@@ -129,7 +116,7 @@ function calculationUpdates() {
     updateFontSize();
 }
 
-function resetLastValues() {
+function resetLastValues() { // Resets saved values used in repeated equal calculations
     lastCalculationOperator = '';
     lastCalculationValue = 0;
 }
@@ -145,7 +132,7 @@ function updateValues() {
     console.log(firstValue + ' ' + secondValue);
 }
 
-function updateFontSize() {
+function updateFontSize() { // Dynamically change font size to fit window
     const length = outputText.textContent.length;
     const fontSize = (50 * 12 / length) + 'px';
 
@@ -155,7 +142,7 @@ function updateFontSize() {
 }
 
 
-
+/* DOM constants */
 const outputText = document.querySelector('.output');
 const buttonClear = document.querySelector('#C');
 const buttonDecimal = document.querySelector('#decimal');
@@ -164,16 +151,17 @@ const buttonNumbers = document.querySelectorAll('.number');
 const buttonOperators = document.querySelectorAll('.operator');
 const buttonEquals = document.querySelector('#equals');
 
+/* Variables */
 let firstValue = 0;
 let secondValue = 0;
 let modifyingFirstValue = true;
 let modifiedSecondValue = false;
 let selectedOperator = '';
 
-/* Needed for repeated equal presses */
-let lastCalculationValue = 0;
+let lastCalculationValue = 0;       // Needed for repeated equal presses
 let lastCalculationOperator = '';
 
+/* Event listeners */
 buttonClear.addEventListener('click', () => clearOutput());
 
 buttonDecimal.addEventListener('click', () => addDecimalSignToOutput());
