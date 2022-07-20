@@ -105,11 +105,10 @@ function calculate() {
 }
 
 function calculationUpdates() {
+    updateCalculationText();
+    
     firstValue = outputText.textContent;
     secondValue = 0;
-
-    updateCalculationText();
-
     modifyingFirstValue = true;
     modifiedFirstValue = false;
     modifiedSecondValue = false;
@@ -123,6 +122,7 @@ function selectOperator(operator) {
         calculate();
         modifyingFirstValue = false;
         selectedOperator = operator;
+        updateCalculationText();
     }
     
     if(selectedOperator !== operator) { // Update if a new operator is clicked
@@ -152,6 +152,8 @@ function updateCalculationText() {
     if(equalsPressed) {
         calculationText.textContent = `${firstValue} ${lastCalculationOperator} ${lastCalculationValue} =`
         equalsPressed = false;
+    } else if(selectedOperator !== '' && modifiedSecondValue) {
+        calculationText.textContent = `${firstValue} ${selectedOperator}`;
     } else {
         calculationText.textContent = `${firstValue} ${selectedOperator}`;
     }
