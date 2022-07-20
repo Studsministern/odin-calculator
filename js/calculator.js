@@ -40,7 +40,7 @@ function modulu(number1, number2) {
 
 /* Calculation */
 function calculate() {
-    if(selectedOperator !== '') { // Normal calculation when operator and values have been chosen
+    if(selectedOperator !== '' && modifiedSecondValue) { // Normal calculation when operator and values have been chosen
         outputText.textContent = operate(firstValue, selectedOperator, secondValue);
         
         lastCalculationValue = secondValue;
