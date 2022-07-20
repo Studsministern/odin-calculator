@@ -43,6 +43,7 @@ function clearOutput() {
     secondValue = 0;
     modifyingFirstValue = true;
     modifiedSecondValue = false;
+    equalsPressed = false;
     selectedOperator = '';
     lastCalculationValue = 0;
     lastCalculationOperator = '';
@@ -94,7 +95,7 @@ function selectOperator(operator) {
 }
 
 function calculate() {
-    if(selectedOperator !== '' && modifiedSecondValue) { // Normal calculation when operator and values have been chosen
+    if(selectedOperator !== '') { // Normal calculation when operator and values have been chosen
         outputText.textContent = operate(firstValue, selectedOperator, secondValue);
         
         lastCalculationValue = secondValue;
@@ -111,10 +112,11 @@ function calculate() {
 }
 
 function calculationUpdates() {
-    updateCurrentCalculationText();
-    
     firstValue = outputText.textContent;
     secondValue = 0;
+
+    updateCurrentCalculationText();
+
     modifyingFirstValue = true;
     modifiedFirstValue = false;
     modifiedSecondValue = false;
@@ -148,13 +150,15 @@ function updateOutputFontSize() { // Dynamically change font size to fit window
 }
 
 function updateCurrentCalculationText() {
-    if(selectedOperator !== '') {
+    if(equalsPressed) {
+        currentCalculationText.textContent = `${firstValue} ${lastCalculationOperator} ${lastCalculationValue} =`
+        equalsPressed = false;
+    } else {
         currentCalculationText.textContent = `${firstValue} ${selectedOperator}`;
     }
 
-    if(lastCalculationOperator !== '' || lastCalculationValue !== 0) {
-        currentCalculationText.textContent = `${firstValue} ${selectedOperator} ${secondValue} =`
-    }
+    updateCurrentCalculationFontSize();
+}
 
     updateCurrentCalculationFontSize();
 }
@@ -184,6 +188,7 @@ let secondValue = 0;
 let modifyingFirstValue = true;
 let modifiedFirstValue = false;
 let modifiedSecondValue = false;
+let equalsPressed = false;
 let selectedOperator = '';
 
 let lastCalculationValue = 0;       // Needed for repeated equal presses
@@ -204,4 +209,7 @@ buttonOperators.forEach(operator => {
     operator.addEventListener('click', () => selectOperator(operator.textContent));
 });
 
-buttonEquals.addEventListener('click', () => calculate());
+buttonEquals.addEventListener('click', () => {
+    equalsPressed = true;
+    calculate();
+});
