@@ -46,8 +46,9 @@ function clearOutput() {
     selectedOperator = '';
     lastCalculationValue = 0;
     lastCalculationOperator = '';
+    currentCalculationText.textContent = '';
     outputText.textContent = '0';
-    updateFontSize();
+    updateOutputFontSize();
 }
 
 function addDecimalSignToOutput() {
@@ -89,6 +90,7 @@ function selectOperator(operator) {
     }
 
     resetLastValues();
+    updateCurrentCalculationText();
 }
 
 function calculate() {
@@ -109,6 +111,8 @@ function calculate() {
 }
 
 function calculationUpdates() {
+    updateCurrentCalculationText();
+    
     firstValue = outputText.textContent;
     secondValue = 0;
     modifyingFirstValue = true;
@@ -116,7 +120,7 @@ function calculationUpdates() {
     modifiedSecondValue = false;
     selectedOperator = '';
 
-    updateFontSize();
+    updateOutputFontSize();
 }
 
 function resetLastValues() { // Resets saved values used in repeated equal calculations
@@ -132,21 +136,40 @@ function updateValues() {
         secondValue = outputText.textContent;
         modifiedSecondValue = true;
     }
-    updateFontSize();
+    updateOutputFontSize();
     console.log(firstValue + ' ' + secondValue);
 }
 
-function updateFontSize() { // Dynamically change font size to fit window
+function updateOutputFontSize() { // Dynamically change font size to fit window
     const length = outputText.textContent.length;
     const fontSize = (50 * 12 / length) + 'px';
 
     outputText.style.fontSize = (length <= 12) ? '50px' : fontSize;
+}
 
-    outputText.style.fontSize = outputText.textContent.length
+function updateCurrentCalculationText() {
+    if(selectedOperator !== '') {
+        currentCalculationText.textContent = `${firstValue} ${selectedOperator}`;
+    }
+
+    if(lastCalculationOperator !== '' || lastCalculationValue !== 0) {
+        currentCalculationText.textContent = `${firstValue} ${selectedOperator} ${secondValue} =`
+    }
+
+    updateCurrentCalculationFontSize();
+}
+
+function updateCurrentCalculationFontSize() { // Dynamically change font size to fit window
+    const length = currentCalculationText.textContent.length;
+    const fontSize = (18 * 33 / length) + 'px';
+
+    currentCalculationText.style.fontSize = (length <= 33) ? '18px' : fontSize;
 }
 
 
+
 /* DOM constants */
+const currentCalculationText = document.querySelector('.current-calculation');
 const outputText = document.querySelector('.output');
 const buttonClear = document.querySelector('#C');
 const buttonDecimal = document.querySelector('#decimal');

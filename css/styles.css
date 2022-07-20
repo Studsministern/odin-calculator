@@ -60,18 +60,33 @@ body {
     gap: var(--gap-width);
 }
 
-.output {
+.row > * {
+    flex: 1;
+}
+
+.display {
     max-width: calc(var(--calculator-width) - 2*var(--output-padding) - 2*var(--gap-width));
     display: flex;
-    align-items: center;
-    justify-content: end;
-    font-size: 50px;
+    flex-direction: column;
+    align-items: end;
+    gap: 12px;
     padding: var(--output-padding);
     overflow: hidden;
 }
 
-.row > * {
-    flex: 1;
+.display > * {
+    display: flex;
+    align-items: center;
+}
+
+.current-calculation {
+    min-height: 18px;
+    font-size: 18px;
+}
+
+.output {
+    height: 50px;
+    font-size: 50px;
 }
 
 .split {
