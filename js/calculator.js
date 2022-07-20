@@ -38,54 +38,6 @@ function modulu(number1, number2) {
 
 
 
-/* Resets */
-function resetAll() {
-    firstValue = 0;
-    secondValue = 0;
-    modifyingFirstValue = true;
-    modifiedSecondValue = false;
-    equalsPressed = false;
-    selectedOperator = '';
-    lastCalculationValue = 0;
-    lastCalculationOperator = '';
-    calculationText.textContent = '';
-    outputText.textContent = '0';
-    updateOutputTextFontSize();
-}
-
-function resetLastValues() { // Resets saved values used in repeated equal calculations
-    lastCalculationOperator = '';
-    lastCalculationValue = 0;
-}
-
-
-
-/* Changing output */
-function addDecimalSignToOutput() {
-    if(!outputText.textContent.match(/[.]/)) outputText.textContent += '.'; // Only adds if there isn't already a '.'
-}
-
-function removeLastCharFromOutput() {
-    if(outputText.textContent !== 0)  outputText.textContent = outputText.textContent.slice(0, -1); // Removes last char
-    if(outputText.textContent === '') outputText.textContent = '0';                                 // If nothing is left, add a '0'
-    updateValues();
-}
-
-function addNumberToOutput(number) {
-    if(outputText.textContent === '0') {                        // Replaces a '0'
-        outputText.textContent = number;
-    } else if(!modifiedFirstValue && !modifiedSecondValue) {    // If the change is the first that happens, it will replace the text
-        outputText.textContent = number;
-    } else if(selectedOperator !== '' && secondValue === 0) {   // Replaces a reset secondValue when an operator has been chosen
-        outputText.textContent = number;
-    } else {                                                    // Will normally add a value
-        outputText.textContent += number;
-    }
-    updateValues();
-}
-
-
-
 /* Calculation */
 function calculate() {
     if(selectedOperator !== '') { // Normal calculation when operator and values have been chosen
@@ -135,6 +87,32 @@ function selectOperator(operator) {
 
 
 
+/* Changing output */
+function addDecimalSignToOutput() {
+    if(!outputText.textContent.match(/[.]/)) outputText.textContent += '.'; // Only adds if there isn't already a '.'
+}
+
+function removeLastCharFromOutput() {
+    if(outputText.textContent !== 0)  outputText.textContent = outputText.textContent.slice(0, -1); // Removes last char
+    if(outputText.textContent === '') outputText.textContent = '0';                                 // If nothing is left, add a '0'
+    updateValues();
+}
+
+function addNumberToOutput(number) {
+    if(outputText.textContent === '0') {                        // Replaces a '0'
+        outputText.textContent = number;
+    } else if(!modifiedFirstValue && !modifiedSecondValue) {    // If the change is the first that happens, it will replace the text
+        outputText.textContent = number;
+    } else if(selectedOperator !== '' && secondValue === 0) {   // Replaces a reset secondValue when an operator has been chosen
+        outputText.textContent = number;
+    } else {                                                    // Will normally add a value
+        outputText.textContent += number;
+    }
+    updateValues();
+}
+
+
+
 /* Updates */
 function updateValues() {
     if(modifyingFirstValue) {
@@ -174,6 +152,28 @@ function updateCalculationTextFontSize() { // Dynamically change font size to fi
     const length = calculationText.textContent.length;
     const fontSize = (18 * 33 / length) + 'px';
     calculationText.style.fontSize = (length <= 33) ? '18px' : fontSize;
+}
+
+
+
+/* Resets */
+function resetAll() {
+    firstValue = 0;
+    secondValue = 0;
+    modifyingFirstValue = true;
+    modifiedSecondValue = false;
+    equalsPressed = false;
+    selectedOperator = '';
+    lastCalculationValue = 0;
+    lastCalculationOperator = '';
+    calculationText.textContent = '';
+    outputText.textContent = '0';
+    updateOutputTextFontSize();
+}
+
+function resetLastValues() { // Resets saved values used in repeated equal calculations
+    lastCalculationOperator = '';
+    lastCalculationValue = 0;
 }
 
 
