@@ -79,7 +79,7 @@ body {
     align-items: center;
 }
 
-.current-calculation {
+.calculation-text {
     min-height: 18px;
     font-size: 18px;
 }

@@ -48,7 +48,7 @@ function resetAll() {
     selectedOperator = '';
     lastCalculationValue = 0;
     lastCalculationOperator = '';
-    currentCalculationText.textContent = '';
+    calculationText.textContent = '';
     outputText.textContent = '0';
     updateOutputFontSize();
 }
@@ -108,7 +108,7 @@ function calculationUpdates() {
     firstValue = outputText.textContent;
     secondValue = 0;
 
-    updateCurrentCalculationText();
+    updateCalculationText();
 
     modifyingFirstValue = true;
     modifiedFirstValue = false;
@@ -127,7 +127,7 @@ function selectOperator(operator) {
     
     if(selectedOperator !== operator) { // Update if a new operator is clicked
         selectedOperator = operator;
-        updateCurrentCalculationText();
+        updateCalculationText();
         modifyingFirstValue = false;
         console.log(operator);
     }
@@ -148,15 +148,15 @@ function updateValues() {
     console.log(firstValue + ' ' + secondValue);
 }
 
-function updateCurrentCalculationText() {
+function updateCalculationText() {
     if(equalsPressed) {
-        currentCalculationText.textContent = `${firstValue} ${lastCalculationOperator} ${lastCalculationValue} =`
+        calculationText.textContent = `${firstValue} ${lastCalculationOperator} ${lastCalculationValue} =`
         equalsPressed = false;
     } else {
-        currentCalculationText.textContent = `${firstValue} ${selectedOperator}`;
+        calculationText.textContent = `${firstValue} ${selectedOperator}`;
     }
 
-    updateCurrentCalculationFontSize();
+    updateCalculationTextFontSize();
 }
 
 
@@ -168,16 +168,16 @@ function updateOutputFontSize() { // Dynamically change font size to fit window
     outputText.style.fontSize = (length <= 12) ? '50px' : fontSize;
 }
 
-function updateCurrentCalculationFontSize() { // Dynamically change font size to fit window
-    const length = currentCalculationText.textContent.length;
+function updateCalculationTextFontSize() { // Dynamically change font size to fit window
+    const length = calculationText.textContent.length;
     const fontSize = (18 * 33 / length) + 'px';
-    currentCalculationText.style.fontSize = (length <= 33) ? '18px' : fontSize;
+    calculationText.style.fontSize = (length <= 33) ? '18px' : fontSize;
 }
 
 
 
 /* DOM constants */
-const currentCalculationText = document.querySelector('.current-calculation');
+const calculationText = document.querySelector('.calculation-text');
 const outputText = document.querySelector('.output');
 const buttonClear = document.querySelector('#C');
 const buttonDecimal = document.querySelector('#decimal');
