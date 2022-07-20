@@ -50,7 +50,7 @@ function resetAll() {
     lastCalculationOperator = '';
     calculationText.textContent = '';
     outputText.textContent = '0';
-    updateOutputFontSize();
+    updateOutputTextFontSize();
 }
 
 function resetLastValues() { // Resets saved values used in repeated equal calculations
@@ -115,7 +115,7 @@ function calculationUpdates() {
     modifiedSecondValue = false;
     selectedOperator = '';
 
-    updateOutputFontSize();
+    updateOutputTextFontSize();
 }
 
 function selectOperator(operator) {    
@@ -144,7 +144,7 @@ function updateValues() {
         secondValue = outputText.textContent;
         modifiedSecondValue = true;
     }
-    updateOutputFontSize();
+    updateOutputTextFontSize();
     console.log(firstValue + ' ' + secondValue);
 }
 
@@ -162,7 +162,7 @@ function updateCalculationText() {
 
 
 /* Variable font sizes */
-function updateOutputFontSize() { // Dynamically change font size to fit window
+function updateOutputTextFontSize() { // Dynamically change font size to fit window
     const length = outputText.textContent.length;
     const fontSize = (50 * 12 / length) + 'px';
     outputText.style.fontSize = (length <= 12) ? '50px' : fontSize;
@@ -178,7 +178,7 @@ function updateCalculationTextFontSize() { // Dynamically change font size to fi
 
 /* DOM constants */
 const calculationText = document.querySelector('.calculation-text');
-const outputText = document.querySelector('.output');
+const outputText = document.querySelector('.output-text');
 const buttonClear = document.querySelector('#C');
 const buttonDecimal = document.querySelector('#decimal');
 const buttonBackspace = document.querySelector('#backspace');
