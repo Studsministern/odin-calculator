@@ -1,4 +1,4 @@
-/* Calculation functions */
+/* Operator functions */
 function operate(number1, operator, number2) {
     switch(operator) {
         case '+':
@@ -37,8 +37,9 @@ function modulu(number1, number2) {
 }
 
 
-/* Button press functions */
-function clearOutput() {
+
+/* Resets */
+function resetAll() {
     firstValue = 0;
     secondValue = 0;
     modifyingFirstValue = true;
@@ -52,6 +53,14 @@ function clearOutput() {
     updateOutputFontSize();
 }
 
+function resetLastValues() { // Resets saved values used in repeated equal calculations
+    lastCalculationOperator = '';
+    lastCalculationValue = 0;
+}
+
+
+
+/* Changing output */
 function addDecimalSignToOutput() {
     if(!outputText.textContent.match(/[.]/)) outputText.textContent += '.'; // Only adds if there isn't already a '.'
 }
@@ -59,7 +68,6 @@ function addDecimalSignToOutput() {
 function removeLastCharFromOutput() {
     if(outputText.textContent !== 0)  outputText.textContent = outputText.textContent.slice(0, -1); // Removes last char
     if(outputText.textContent === '') outputText.textContent = '0';                                 // If nothing is left, add a '0'
-
     updateValues();
 }
 
@@ -74,26 +82,11 @@ function addNumberToOutput(number) {
         outputText.textContent += number;
     }
     updateValues();
-    resetLastValues();
 }
 
-function selectOperator(operator) {    
-    if(selectedOperator !== '' && modifiedSecondValue) { // Chained operators
-        calculate();
-        modifyingFirstValue = false;
-        selectedOperator = operator;
-    }
-    
-    if(selectedOperator !== operator) { // Update if a new operator is clicked
-        selectedOperator = operator;
-        modifyingFirstValue = false;
-        console.log(operator);
-    }
 
-    resetLastValues();
-    updateCurrentCalculationText();
-}
 
+/* Calculation */
 function calculate() {
     if(selectedOperator !== '') { // Normal calculation when operator and values have been chosen
         outputText.textContent = operate(firstValue, selectedOperator, secondValue);
@@ -125,11 +118,24 @@ function calculationUpdates() {
     updateOutputFontSize();
 }
 
-function resetLastValues() { // Resets saved values used in repeated equal calculations
-    lastCalculationOperator = '';
-    lastCalculationValue = 0;
+function selectOperator(operator) {    
+    if(selectedOperator !== '' && modifiedSecondValue) { // Chained operators
+        calculate();
+        modifyingFirstValue = false;
+        selectedOperator = operator;
+    }
+    
+    if(selectedOperator !== operator) { // Update if a new operator is clicked
+        selectedOperator = operator;
+        updateCurrentCalculationText();
+        modifyingFirstValue = false;
+        console.log(operator);
+    }
 }
 
+
+
+/* Updates */
 function updateValues() {
     if(modifyingFirstValue) {
         firstValue = outputText.textContent;
@@ -140,13 +146,6 @@ function updateValues() {
     }
     updateOutputFontSize();
     console.log(firstValue + ' ' + secondValue);
-}
-
-function updateOutputFontSize() { // Dynamically change font size to fit window
-    const length = outputText.textContent.length;
-    const fontSize = (50 * 12 / length) + 'px';
-
-    outputText.style.fontSize = (length <= 12) ? '50px' : fontSize;
 }
 
 function updateCurrentCalculationText() {
@@ -160,13 +159,18 @@ function updateCurrentCalculationText() {
     updateCurrentCalculationFontSize();
 }
 
-    updateCurrentCalculationFontSize();
+
+
+/* Variable font sizes */
+function updateOutputFontSize() { // Dynamically change font size to fit window
+    const length = outputText.textContent.length;
+    const fontSize = (50 * 12 / length) + 'px';
+    outputText.style.fontSize = (length <= 12) ? '50px' : fontSize;
 }
 
 function updateCurrentCalculationFontSize() { // Dynamically change font size to fit window
     const length = currentCalculationText.textContent.length;
     const fontSize = (18 * 33 / length) + 'px';
-
     currentCalculationText.style.fontSize = (length <= 33) ? '18px' : fontSize;
 }
 
@@ -182,6 +186,8 @@ const buttonNumbers = document.querySelectorAll('.number');
 const buttonOperators = document.querySelectorAll('.operator');
 const buttonEquals = document.querySelector('#equals');
 
+
+
 /* Variables */
 let firstValue = 0;
 let secondValue = 0;
@@ -194,19 +200,27 @@ let selectedOperator = '';
 let lastCalculationValue = 0;       // Needed for repeated equal presses
 let lastCalculationOperator = '';
 
+
+
 /* Event listeners */
-buttonClear.addEventListener('click', () => clearOutput());
+buttonClear.addEventListener('click', () => resetAll());
 
 buttonDecimal.addEventListener('click', () => addDecimalSignToOutput());
 
 buttonBackspace.addEventListener('click', () => removeLastCharFromOutput());
 
 buttonNumbers.forEach(number => {
-    number.addEventListener('click', () => addNumberToOutput(number.textContent));
+    number.addEventListener('click', () => {
+        resetLastValues();
+        addNumberToOutput(number.textContent);
+    });
 });
 
 buttonOperators.forEach(operator => {
-    operator.addEventListener('click', () => selectOperator(operator.textContent));
+    operator.addEventListener('click', () => {
+        resetLastValues();
+        selectOperator(operator.textContent);
+    });
 });
 
 buttonEquals.addEventListener('click', () => {
