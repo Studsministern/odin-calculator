@@ -64,7 +64,7 @@ function removeLastCharFromOutput() {
 function addNumberToOutput(number) {
     if(outputText.textContent === '0') {                        // Replaces a '0'
         outputText.textContent = number;
-    } else if(!modifiedFirstValue) {                            // If the change is the first that happens, it will replace the text
+    } else if(!modifiedFirstValue && !modifiedSecondValue) {    // If the change is the first that happens, it will replace the text
         outputText.textContent = number;
     } else if(selectedOperator !== '' && secondValue === 0) {   // Replaces a reset secondValue when an operator has been chosen
         outputText.textContent = number;
