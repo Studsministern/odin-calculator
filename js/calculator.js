@@ -174,6 +174,7 @@ function resetAll() {
 function resetLastValues() { // Resets saved values used in repeated equal calculations
     lastCalculationOperator = '';
     lastCalculationValue = 0;
+    equalsPressed = false;
 }
 
 
