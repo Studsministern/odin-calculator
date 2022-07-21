@@ -100,8 +100,9 @@ body {
 
 /* Buttons */
 button {
-    border: 0;
+    border: none;
     box-shadow: 0 0 2px var(--shadow-color);
+    cursor: pointer;
 }
 
 .number, #decimal {
