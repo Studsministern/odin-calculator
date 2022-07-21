@@ -139,6 +139,23 @@ function updateCalculationText() {
     updateCalculationTextFontSize();
 }
 
+function inverseCurrentNumber() {
+    if(modifyingFirstValue) {                                   // Modifying the first value
+        if(!modifiedFirstValue && !modifiedSecondValue) {       // Clears calculationText if a calculated value is inversed
+            calculationText.textContent = '';
+        }
+
+        firstValue = -firstValue;
+        modifiedFirstValue = true;
+        outputText.textContent = firstValue;
+    } else if (!modifyingFirstValue && modifiedSecondValue){    // Modifying the second value, when the second value has been assigned
+        secondValue = -secondValue;
+        modifiedSecondValue = true;
+        outputText.textContent = secondValue;
+    } 
+
+    resetLastValues();
+}
 
 
 /* Variable font sizes */
@@ -184,6 +201,7 @@ const calculationText = document.querySelector('.calculation-text');
 const outputText = document.querySelector('.output-text');
 const buttonClear = document.querySelector('#C');
 const buttonDecimal = document.querySelector('#decimal');
+const buttonInverse = document.querySelector('#inverse');
 const buttonBackspace = document.querySelector('#backspace');
 const buttonNumbers = document.querySelectorAll('.number');
 const buttonOperators = document.querySelectorAll('.operator');
@@ -209,6 +227,11 @@ let lastCalculationOperator = '';
 buttonClear.addEventListener('click', () => resetAll());
 
 buttonDecimal.addEventListener('click', () => addDecimalSignToOutput());
+
+buttonInverse.addEventListener('click', () => {
+    resetLastValues();
+    inverseCurrentNumber();
+});
 
 buttonBackspace.addEventListener('click', () => removeLastCharFromOutput());
 

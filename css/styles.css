@@ -92,15 +92,6 @@ body {
     font-size: 50px;
 }
 
-.split {
-    display: flex;
-    gap: var(--gap-width);
-}
-
-.split > * {
-    flex: 1;
-}
-
 /* Buttons */
 button {
     border: none;
@@ -108,7 +99,7 @@ button {
     cursor: pointer;
 }
 
-.number, #decimal {
+.number, #decimal, #inverse {
     background-color: var(--bg-color-numbers);
 }
 
@@ -121,7 +112,7 @@ button {
 }
 
 /* Hover effect */
-button:hover, #decimal:hover {
+button:hover, #decimal:hover, #inverse:hover {
     background: var(--bg-color-numbers-operators-hover) radial-gradient(circle, transparent 1%, 
                 var(--bg-color-numbers-operators-hover) 1%) center/15000%;
 }
@@ -137,7 +128,7 @@ button:hover, #decimal:hover {
     transition: background 0.3s; /* Time to spread outwards */
 }
 
-.ripple:active, #decimal:active {
+.ripple:active, #decimal:active, #inverse:active {
     background-color: var(--bg-color-numbers-operators-click); 
     background-size: 100%;
     transition: background 0s; /* Instantly goes to the center */
