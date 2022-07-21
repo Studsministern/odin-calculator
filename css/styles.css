@@ -14,9 +14,12 @@
     --shadow-color: #aeaba9;
     
     /* Hover settings */
-    --hover-transition: 0.08s;
     --bg-color-numbers-operators-hover: #918f8c;
     --bg-color-equals-hover: #f18928;
+
+    /* Click settings */
+    --bg-color-numbers-operators-click: #9b9996;
+    --bg-color-equals-click: #fe9029;
 }
 
 /* Document structure */
@@ -117,13 +120,29 @@ button {
     background-color: var(--bg-color-equals);
 }
 
-/* Buttons:hover */
-.number:hover, .modifier:hover, .operator:hover, #decimal:hover {
-    transition: var(--hover-transition);
-    background-color: var(--bg-color-numbers-operators-hover);
+/* Hover effect */
+button:hover, #decimal:hover {
+    background: var(--bg-color-numbers-operators-hover) radial-gradient(circle, transparent 1%, 
+                var(--bg-color-numbers-operators-hover) 1%) center/15000%;
 }
 
 #equals:hover {
-    transition: var(--hover-transition);
-    background-color: var(--bg-color-equals-hover);
+    background: var(--bg-color-equals-hover) radial-gradient(circle, transparent 1%, 
+                var(--bg-color-equals-hover) 1%) center/15000%;
+}
+
+/* Ripple effect */
+.ripple {
+    background-position: center;
+    transition: background 0.3s; /* Time to spread outwards */
+}
+
+.ripple:active, #decimal:active {
+    background-color: var(--bg-color-numbers-operators-click); 
+    background-size: 100%;
+    transition: background 0s; /* Instantly goes to the center */
+}
+
+#equals:active {
+    background-color: var(--bg-color-equals-click);
 }
