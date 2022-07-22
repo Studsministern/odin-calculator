@@ -10,7 +10,7 @@ function operate(number1, operator, number2) {
         case '/':
             return divide(number1, number2);
         case '%':
-            return modulu(number1, number2);
+            return modulo(number1, number2);
         default:
             return 'ERROR: Wrong operator';
     }
@@ -32,7 +32,7 @@ function divide(number1, number2) {
     return +number1 / +number2;
 }
 
-function modulu(number1, number2) {
+function modulo(number1, number2) {
     return +number1 % +number2;
 }
 
