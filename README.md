@@ -18,7 +18,7 @@ The calculator supports addition `+`, subtraction `-`, multiplication `x`, divis
 
 Features also include:
 
-- Display for the current/previous calculation. In the example above, this is the previous calculation `16.7 x -53.268 =`.
-- Chained calculations with operators without using `=`. For example the input `12 + 7 - 5 * 3 =` will give the result 42.
-- Repeat calculations by pressing `=`. For example `2 + 2 = 4`. The next press of `=` will result in `4 + 2 = 6`. The next is `6 + 2 = 8` etc. 
+- Display for the current/previous calculation. In the example above, the previous calculation is `16.7 x -53.268 =`.
+- Chained calculations with operators. For example the input `12 + 7 - 5 * 3 =` will give the result 42.
+- Repeat calculations by pressing `=`. For example `2 + 2 = 4`. The next press of `=` will result in `4 + 2 = 6` etc.
 - Variable font size so large values or many decimal places doesn't overflow the display.
