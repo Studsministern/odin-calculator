@@ -34,8 +34,9 @@
 body {
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     background-color: var(--bg-color-main);
 }
 
@@ -90,6 +91,21 @@ body {
 .output-text {
     height: 50px;
     font-size: 50px;
+}
+
+footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: var(--bg-color-numbers);
+}
+
+.author {
+    text-decoration: none;
+    font-size: 18px;
 }
 
 /* Buttons */
