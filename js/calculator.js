@@ -65,13 +65,19 @@ const display = (() => {
         _outputText.style.fontSize = (length <= 12) ? '50px' : fontSize;
     }
 
+    const resetText = () => {
+        setCalculationText('');
+        setOutputText('0');
+    }
+
     return {
         getCalculationText,
         getOutputText,
         setCalculationText,
         setOutputText,
         addDecimalSign,
-        removeLastChar
+        removeLastChar,
+        resetText
     }
 })();
 
@@ -230,8 +236,7 @@ function resetAll() {
     selectedOperator = '';
     lastCalculationValue = 0;
     lastCalculationOperator = '';
-    display.setCalculationText('');
-    display.setOutputText('0');
+    display.resetText();
 }
 
 function resetLastValues() { // Resets saved values used in repeated equal calculations
