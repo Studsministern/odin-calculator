@@ -141,8 +141,6 @@ function calculate() {
         
         calculationUpdates();
     }
-
-    console.log(firstValue + ' ' + secondValue + ' ' + lastCalculationOperator);
 }
 
 function calculationUpdates() {
@@ -194,7 +192,6 @@ function updateValues() {
         secondValue = display.getOutputText();
         modifiedSecondValue = true;
     }
-    console.log(firstValue + ' ' + secondValue);
 }
 
 const updateCalculationText = () => {
