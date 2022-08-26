@@ -50,8 +50,7 @@ const display = (() => {
     }
 
     const removeLastChar = () => {
-        if(_outputText.textContent !== 0)  display.setOutputText(_outputText.textContent.slice(0, -1)); // Removes last char
-        updateValues();
+        if(_outputText.textContent !== 0) display.setOutputText(_outputText.textContent.slice(0, -1)); // Removes last char
     }
 
     const _updateCalculationTextFontSize = () => { // Dynamically change font size to fit window
@@ -95,12 +94,16 @@ const buttons = (() => { // Button module
             inverseCurrentNumber();
         });
 
-        _buttonBackspace.addEventListener('click', () => display.removeLastChar());
+        _buttonBackspace.addEventListener('click', () => {
+            display.removeLastChar();
+            updateValues();
+        });
 
         _buttonNumbers.forEach(number => {
             number.addEventListener('click', () => {
                 resetLastValues();
                 addNumberToOutput(number.textContent);
+                updateValues();
             });
         });
 
@@ -163,10 +166,7 @@ function selectOperator(operator) {
     }
 }
 
-
-
 /* Changing output */
-
 function addNumberToOutput(number) {
     if(display.getOutputText() === '0') {                        // Replaces a '0'
         display.setOutputText(number);
@@ -177,10 +177,7 @@ function addNumberToOutput(number) {
     } else {                                                    // Will normally add a value
         display.setOutputText(display.getOutputText() + number);
     }
-    updateValues();
 }
-
-
 
 /* Updates */
 function updateValues() {
@@ -222,8 +219,6 @@ function inverseCurrentNumber() {
 
     resetLastValues();
 }
-
-
 
 /* Resets */
 function resetAll() {
