@@ -38,9 +38,14 @@ const display = (() => {
         _calculationText.textContent = text;
         _updateCalculationTextFontSize();
     }
+
     const setOutputText = (text) => {
         _outputText.textContent = text;
         _updateOutputTextFontSize();
+    }
+
+    const addDecimalSign = () => {
+        if(!_outputText.textContent.match(/[.]/)) _outputText.textContent += '.'; // Only adds if there isn't already a '.'
     }
 
     const _updateCalculationTextFontSize = () => { // Dynamically change font size to fit window
@@ -59,7 +64,8 @@ const display = (() => {
         getCalculationText,
         getOutputText,
         setCalculationText,
-        setOutputText
+        setOutputText,
+        addDecimalSign
     }
 })();
 
@@ -75,7 +81,7 @@ const buttons = (() => { // Button module
     const _init = (() => {
         _buttonClear.addEventListener('click', () => resetAll());
 
-        _buttonDecimal.addEventListener('click', () => addDecimalSignToOutput());
+        _buttonDecimal.addEventListener('click', () => display.addDecimalSign());
 
         _buttonInverse.addEventListener('click', () => {
             resetLastValues();
@@ -153,10 +159,6 @@ function selectOperator(operator) {
 
 
 /* Changing output */
-function addDecimalSignToOutput() {
-    if(!display.getOutputText().match(/[.]/)) display.setOutputText(display.getOutputText() + '.'); // Only adds if there isn't already a '.'
-}
-
 function removeLastCharFromOutput() {
     if(display.getOutputText() !== 0)  display.setOutputText(display.getOutputText().slice(0, -1)); // Removes last char
     if(display.getOutputText() === '') display.setOutputText('0');                                 // If nothing is left, add a '0'
