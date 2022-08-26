@@ -1,5 +1,34 @@
 const operator = (() => { // Operator module
-    const operate = (number1, operator, number2) => {
+    let currentOperator = '';
+    let chainOperator = '';
+
+    const getCurrentOperator = () => currentOperator;
+    const getChainOperator = () => chainOperator;
+    
+    const updateChainOperator = () => {
+        chainOperator = currentOperator;
+    }
+
+    const switchOperator = (operator) => {    
+        if(currentOperator && modifiedSecondValue) { // Chained operators
+            calculate();
+            modifyingFirstValue = false;
+            currentOperator = operator;
+            updateCalculationText();
+        }
+        
+        if(currentOperator !== operator) { // Update if a new operator is clicked
+            currentOperator = operator;
+            updateCalculationText();
+            modifyingFirstValue = false;
+        }
+    }
+
+    const operateEquals = (number1, number2) => _operate(number1, currentOperator, number2);
+
+    const operateChain = (number1, number2) => _operate(number1, chainOperator, number2);
+    
+    const _operate = (number1, operator, number2) => {
         switch(operator) {
             case '+':
                 return _add(number1, number2);
@@ -22,8 +51,23 @@ const operator = (() => { // Operator module
     const _divide   = (number1, number2) => +number1 / +number2;
     const _modulo   = (number1, number2) => +number1 % +number2;
 
+    const resetCurrentOperator = () => {
+        currentOperator = '';
+    }
+    
+    const resetChainOperator = () => {
+        chainOperator = '';
+    }
+
     return {
-        operate
+        getCurrentOperator,
+        getChainOperator,
+        updateChainOperator,
+        switchOperator,
+        operateEquals,
+        operateChain,
+        resetCurrentOperator,
+        resetChainOperator
     }
 })();
 
@@ -113,10 +157,10 @@ const buttons = (() => { // Button module
             });
         });
 
-        _buttonOperators.forEach(operator => {
-            operator.addEventListener('click', () => {
+        _buttonOperators.forEach(buttonOperator => {
+            buttonOperator.addEventListener('click', () => {
                 resetLastValues();
-                selectOperator(operator.textContent);
+                operator.switchOperator(buttonOperator.textContent);
             });
         });
 
@@ -129,15 +173,15 @@ const buttons = (() => { // Button module
 
 /* Calculation */
 function calculate() {
-    if(selectedOperator !== '' && modifiedSecondValue) { // Normal calculation when operator and values have been chosen
-        display.setOutputText(operator.operate(firstValue, selectedOperator, secondValue));
+    if(operator.getCurrentOperator() !== '' && modifiedSecondValue) { // Normal calculation when operator and values have been chosen
+        display.setOutputText(operator.operateEquals(firstValue, secondValue));
         
         lastCalculationValue = secondValue;
-        lastCalculationOperator = selectedOperator;
+        operator.updateChainOperator();
         
         calculationUpdates();
-    } else if(lastCalculationOperator !== '') { // Repeated equal calculation
-        display.setOutputText(operator.operate(firstValue, lastCalculationOperator, lastCalculationValue));
+    } else if(operator.getChainOperator() !== '') { // Repeated equal calculation
+        display.setOutputText(operator.operateChain(firstValue, lastCalculationValue));
         
         calculationUpdates();
     }
@@ -151,23 +195,7 @@ function calculationUpdates() {
     modifyingFirstValue = true;
     modifiedFirstValue = false;
     modifiedSecondValue = false;
-    selectedOperator = '';
-}
-
-function selectOperator(operator) {    
-    if(selectedOperator !== '' && modifiedSecondValue) { // Chained operators
-        calculate();
-        modifyingFirstValue = false;
-        selectedOperator = operator;
-        updateCalculationText();
-    }
-    
-    if(selectedOperator !== operator) { // Update if a new operator is clicked
-        selectedOperator = operator;
-        updateCalculationText();
-        modifyingFirstValue = false;
-        console.log(operator);
-    }
+    operator.resetCurrentOperator()
 }
 
 /* Changing output */
@@ -176,7 +204,7 @@ function addNumberToOutput(number) {
         display.setOutputText(number);
     } else if(!modifiedFirstValue && !modifiedSecondValue) {    // If the change is the first that happens, it will replace the text
         display.setOutputText(number);
-    } else if(selectedOperator !== '' && secondValue === 0) {   // Replaces a reset secondValue when an operator has been chosen
+    } else if(operator.getCurrentOperator() !== '' && secondValue === 0) {   // Replaces a reset secondValue when an operator has been chosen
         display.setOutputText(number);
     } else {                                                    // Will normally add a value
         display.setOutputText(display.getOutputText() + number);
@@ -196,12 +224,12 @@ function updateValues() {
 
 const updateCalculationText = () => {
     if(equalsPressed) {
-        display.setCalculationText(`${firstValue} ${lastCalculationOperator} ${lastCalculationValue} =`);
+        display.setCalculationText(`${firstValue} ${operator.getChainOperator()} ${lastCalculationValue} =`);
         equalsPressed = false;
-    } else if(selectedOperator !== '' && modifiedSecondValue) {
-        display.setCalculationText(`${firstValue} ${selectedOperator}`);
+    } else if(operator.getCurrentOperator() !== '' && modifiedSecondValue) {
+        display.setCalculationText(`${firstValue} ${operator.getCurrentOperator()}`);
     } else {
-        display.setCalculationText(`${firstValue} ${selectedOperator}`);
+        display.setCalculationText(`${firstValue} ${operator.getCurrentOperator()}`);
     }
 }
 
@@ -230,14 +258,14 @@ function resetAll() {
     modifyingFirstValue = true;
     modifiedSecondValue = false;
     equalsPressed = false;
-    selectedOperator = '';
     lastCalculationValue = 0;
-    lastCalculationOperator = '';
+    operator.resetCurrentOperator();
+    operator.resetChainOperator();
     display.resetText();
 }
 
 function resetLastValues() { // Resets saved values used in repeated equal calculations
-    lastCalculationOperator = '';
+    operator.resetChainOperator();
     lastCalculationValue = 0;
     equalsPressed = false;
 }
@@ -249,7 +277,5 @@ let modifyingFirstValue = true;
 let modifiedFirstValue = false;
 let modifiedSecondValue = false;
 let equalsPressed = false;
-let selectedOperator = '';
 
 let lastCalculationValue = 0;       // Needed for repeated equal presses
-let lastCalculationOperator = '';
