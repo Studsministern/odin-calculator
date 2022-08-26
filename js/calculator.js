@@ -40,12 +40,18 @@ const display = (() => {
     }
 
     const setOutputText = (text) => {
-        _outputText.textContent = text;
+        if(text === '') _outputText.textcontent = '0'; // The output should never be empty
+        else            _outputText.textContent = text;
         _updateOutputTextFontSize();
     }
 
     const addDecimalSign = () => {
         if(!_outputText.textContent.match(/[.]/)) _outputText.textContent += '.'; // Only adds if there isn't already a '.'
+    }
+
+    const removeLastChar = () => {
+        if(_outputText.textContent !== 0)  display.setOutputText(_outputText.textContent.slice(0, -1)); // Removes last char
+        updateValues();
     }
 
     const _updateCalculationTextFontSize = () => { // Dynamically change font size to fit window
@@ -65,7 +71,8 @@ const display = (() => {
         getOutputText,
         setCalculationText,
         setOutputText,
-        addDecimalSign
+        addDecimalSign,
+        removeLastChar
     }
 })();
 
@@ -88,7 +95,7 @@ const buttons = (() => { // Button module
             inverseCurrentNumber();
         });
 
-        _buttonBackspace.addEventListener('click', () => removeLastCharFromOutput());
+        _buttonBackspace.addEventListener('click', () => display.removeLastChar());
 
         _buttonNumbers.forEach(number => {
             number.addEventListener('click', () => {
@@ -159,11 +166,6 @@ function selectOperator(operator) {
 
 
 /* Changing output */
-function removeLastCharFromOutput() {
-    if(display.getOutputText() !== 0)  display.setOutputText(display.getOutputText().slice(0, -1)); // Removes last char
-    if(display.getOutputText() === '') display.setOutputText('0');                                 // If nothing is left, add a '0'
-    updateValues();
-}
 
 function addNumberToOutput(number) {
     if(display.getOutputText() === '0') {                        // Replaces a '0'
