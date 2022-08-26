@@ -1,5 +1,5 @@
 const operator = (() => { // Operator module
-    const operate = (number1, number2, operator) => {
+    const operate = (number1, operator, number2) => {
         switch(operator) {
             case '+':
                 return _add(number1, number2);
