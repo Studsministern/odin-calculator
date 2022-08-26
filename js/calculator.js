@@ -10,17 +10,17 @@ const operator = (() => { // Operator module
     }
 
     const switchOperator = (operator) => {    
-        if(currentOperator && modifiedSecondValue) { // Chained operators
-            calculate();
-            modifyingFirstValue = false;
+        if(currentOperator && calculator.getModifiedSecondValue()) { // Chained operators
+            calculator.calculate();
+            calculator.setModifyingFirstValue(false);
             currentOperator = operator;
-            updateCalculationText();
+            calculator.updateCalculationText();
         }
         
         if(currentOperator !== operator) { // Update if a new operator is clicked
             currentOperator = operator;
-            updateCalculationText();
-            modifyingFirstValue = false;
+            calculator.updateCalculationText();
+            calculator.setModifyingFirstValue(false);
         }
     }
 
@@ -92,9 +92,9 @@ const display = (() => {
     const addNumber = (number) => {
         if(getOutputText() === '0') {                        // Replaces a '0'
             setOutputText(number);
-        } else if(!modifiedFirstValue && !modifiedSecondValue) {    // If the change is the first that happens, it will replace the text
+        } else if(!calculator.getModifiedFirstValue() && !calculator.getModifiedSecondValue()) {    // If the change is the first that happens, it will replace the text
             setOutputText(number);
-        } else if(operator.getCurrentOperator() !== '' && secondValue === 0) {   // Replaces a reset secondValue when an operator has been chosen
+        } else if(operator.getCurrentOperator() !== '' && calculator.getSecondValue() === 0) {   // Replaces a reset secondValue when an operator has been chosen
             setOutputText(number);
         } else {                                                    // Will normally add a value
             setOutputText(getOutputText() + number);
@@ -148,134 +148,159 @@ const buttons = (() => { // Button module
     const _buttonEquals = document.querySelector('#equals');
 
     const _init = (() => {
-        _buttonClear.addEventListener('click', () => resetAll());
+        _buttonClear.addEventListener('click', () => calculator.resetAll());
 
         _buttonDecimal.addEventListener('click', () => display.addDecimalSign());
 
         _buttonInverse.addEventListener('click', () => {
-            resetLastValues();
-            inverseCurrentNumber();
+            calculator.resetChainValues();
+            calculator.inverseCurrentValue();
         });
 
         _buttonBackspace.addEventListener('click', () => {
             display.removeLastChar();
-            updateValues();
+            calculator.updateValues();
         });
 
         _buttonNumbers.forEach(number => {
             number.addEventListener('click', () => {
-                resetLastValues();
+                calculator.resetChainValues();
                 display.addNumber(number.textContent);
-                updateValues();
+                calculator.updateValues();
             });
         });
 
         _buttonOperators.forEach(buttonOperator => {
             buttonOperator.addEventListener('click', () => {
-                resetLastValues();
+                calculator.resetChainValues();
                 operator.switchOperator(buttonOperator.textContent);
             });
         });
 
         _buttonEquals.addEventListener('click', () => {
-            equalsPressed = true;
-            calculate();
+            calculator.setEqualsPressed(true);
+            calculator.calculate();
         });
     })();
 })();
 
-/* Calculation */
-function calculate() {
-    if(operator.getCurrentOperator() !== '' && modifiedSecondValue) { // Normal calculation when operator and values have been chosen
-        display.setOutputText(operator.operateEquals(firstValue, secondValue));
-        
-        lastCalculationValue = secondValue;
-        operator.updateChainOperator();
-        
-        calculationUpdates();
-    } else if(operator.getChainOperator() !== '') { // Repeated equal calculation
-        display.setOutputText(operator.operateChain(firstValue, lastCalculationValue));
-        
-        calculationUpdates();
+const calculator = (() => {
+    let _firstValue = 0;
+    let _secondValue = 0;
+    let _modifyingFirstValue = true;
+    let _modifiedFirstValue = false;
+    let _modifiedSecondValue = false;
+    let _equalsPressed = false;
+    let _chainValue = 0;       // Needed for repeated equal presses
+
+    const getSecondValue         = () => _secondValue;
+    const getModifiedFirstValue  = () => _modifiedFirstValue;
+    const getModifiedSecondValue = () => _modifiedSecondValue;
+
+    const setModifyingFirstValue = (bool) => {
+        _modifyingFirstValue = bool;
     }
-}
 
-function calculationUpdates() {
-    updateCalculationText();
-    
-    firstValue = display.getOutputText();
-    secondValue = 0;
-    modifyingFirstValue = true;
-    modifiedFirstValue = false;
-    modifiedSecondValue = false;
-    operator.resetCurrentOperator()
-}
-
-/* Updates */
-function updateValues() {
-    if(modifyingFirstValue) {
-        firstValue = display.getOutputText();
-        modifiedFirstValue = true;
-    } else {
-        secondValue = display.getOutputText();
-        modifiedSecondValue = true;
-    }
-}
-
-const updateCalculationText = () => {
-    if(equalsPressed) {
-        display.setCalculationText(`${firstValue} ${operator.getChainOperator()} ${lastCalculationValue} =`);
-        equalsPressed = false;
-    } else if(operator.getCurrentOperator() !== '' && modifiedSecondValue) {
-        display.setCalculationText(`${firstValue} ${operator.getCurrentOperator()}`);
-    } else {
-        display.setCalculationText(`${firstValue} ${operator.getCurrentOperator()}`);
-    }
-}
-
-function inverseCurrentNumber() {
-    if(modifyingFirstValue) {                                   // Modifying the first value
-        if(!modifiedFirstValue && !modifiedSecondValue) {       // Clears calculationText if a calculated value is inversed
-            display.setCalculationText('');
-        }
-
-        firstValue = -firstValue;
-        modifiedFirstValue = true;
-        display.setOutputText(firstValue);
-    } else if (!modifyingFirstValue && modifiedSecondValue){    // Modifying the second value, when the second value has been assigned
-        secondValue = -secondValue;
-        modifiedSecondValue = true;
-        display.setOutputText(secondValue);
+    const setEqualsPressed = (bool) => {
+        _equalsPressed = bool;
     } 
 
-    resetLastValues();
-}
+    const calculate = () => {
+        if(operator.getCurrentOperator() !== '' && _modifiedSecondValue) { // Normal calculation when operator and values have been chosen
+            display.setOutputText(operator.operateEquals(_firstValue, _secondValue));
+            
+            _chainValue = _secondValue;
+            operator.updateChainOperator();
+            
+            _calculationUpdates();
+        } else if(operator.getChainOperator() !== '') { // Repeated equal calculation
+            display.setOutputText(operator.operateChain(_firstValue, _chainValue));
+            
+            _calculationUpdates();
+        }
+    }
 
-/* Resets */
-function resetAll() {
-    firstValue = 0;
-    secondValue = 0;
-    modifyingFirstValue = true;
-    modifiedSecondValue = false;
-    equalsPressed = false;
-    lastCalculationValue = 0;
-    operator.resetCurrentOperator();
-    operator.resetChainOperator();
-    display.resetText();
-}
+    const _calculationUpdates = () => {
+        updateCalculationText();
+        
+        _firstValue = display.getOutputText();
+        _secondValue = 0;
+        _modifyingFirstValue = true;
+        _modifiedFirstValue = false;
+        _modifiedSecondValue = false;
+        operator.resetCurrentOperator()
+    }
 
-function resetLastValues() { // Resets saved values used in repeated equal calculations
-    operator.resetChainOperator();
-    lastCalculationValue = 0;
-    equalsPressed = false;
-}
+    const updateCalculationText = () => {
+        if(_equalsPressed) {
+            display.setCalculationText(`${_firstValue} ${operator.getChainOperator()} ${_chainValue} =`);
+            _equalsPressed = false;
+        } else if(operator.getCurrentOperator() !== '' && _modifiedSecondValue) {
+            display.setCalculationText(`${_firstValue} ${operator.getCurrentOperator()}`);
+        } else {
+            display.setCalculationText(`${_firstValue} ${operator.getCurrentOperator()}`);
+        }
+    }
 
-/* Variables */
-let firstValue = 0;
-let secondValue = 0;
-let modifyingFirstValue = true;
-let modifiedFirstValue = false;
-let modifiedSecondValue = false;
-let equalsPressed = false;
+    const updateValues = () => {
+        if(_modifyingFirstValue) {
+            _firstValue = display.getOutputText();
+            _modifiedFirstValue = true;
+        } else {
+            _secondValue = display.getOutputText();
+            _modifiedSecondValue = true;
+        }
+    }
 
-let lastCalculationValue = 0;       // Needed for repeated equal presses
+    const inverseCurrentValue = () => {
+        if(_modifyingFirstValue) {                                   // Modifying the first value
+            if(!_modifiedFirstValue && !_modifiedSecondValue) {       // Clears calculationText if a calculated value is inversed
+                display.setCalculationText('');
+            }
+    
+            _firstValue = -_firstValue;
+            _modifiedFirstValue = true;
+            display.setOutputText(_firstValue);
+        } else if (!_modifyingFirstValue && _modifiedSecondValue){    // Modifying the second value, when the second value has been assigned
+            _secondValue = -_secondValue;
+            _modifiedSecondValue = true;
+            display.setOutputText(_secondValue);
+        } 
+    
+        calculator.resetChainValues();
+    }
+
+    const resetAll = () => {
+        _firstValue = 0;
+        _secondValue = 0;
+        _modifyingFirstValue = true;
+        _modifiedSecondValue = false;
+        resetChainValues();
+        operator.resetCurrentOperator();
+        display.resetText();
+    }
+
+    const resetChainValues = () => { // Resets saved values used in repeated equal calculations
+        _chainValue = 0;
+        _equalsPressed = false;
+        operator.resetChainOperator();
+    }
+
+    return {
+        //getFirstValue,
+        getSecondValue,
+        //getModifyingFirstValue,
+        getModifiedFirstValue,
+        getModifiedSecondValue,
+        setModifyingFirstValue,
+        //setModifiedFirstValue,
+        //setModifiedSecondValue,
+        setEqualsPressed,
+        calculate,
+        updateCalculationText,
+        updateValues,
+        inverseCurrentValue,
+        resetAll,
+        resetChainValues
+    }
+})();
