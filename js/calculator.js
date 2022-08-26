@@ -27,6 +27,48 @@ const operator = (() => { // Operator module
     }
 })();
 
+const buttons = (() => { // Button module
+    const _buttonClear = document.querySelector('#C');
+    const _buttonDecimal = document.querySelector('#decimal');
+    const _buttonInverse = document.querySelector('#inverse');
+    const _buttonBackspace = document.querySelector('#backspace');
+    const _buttonNumbers = document.querySelectorAll('.number');
+    const _buttonOperators = document.querySelectorAll('.operator');
+    const _buttonEquals = document.querySelector('#equals');
+
+    const _init = (() => {
+        _buttonClear.addEventListener('click', () => resetAll());
+
+        _buttonDecimal.addEventListener('click', () => addDecimalSignToOutput());
+
+        _buttonInverse.addEventListener('click', () => {
+            resetLastValues();
+            inverseCurrentNumber();
+        });
+
+        _buttonBackspace.addEventListener('click', () => removeLastCharFromOutput());
+
+        _buttonNumbers.forEach(number => {
+            number.addEventListener('click', () => {
+                resetLastValues();
+                addNumberToOutput(number.textContent);
+            });
+        });
+
+        _buttonOperators.forEach(operator => {
+            operator.addEventListener('click', () => {
+                resetLastValues();
+                selectOperator(operator.textContent);
+            });
+        });
+
+        _buttonEquals.addEventListener('click', () => {
+            equalsPressed = true;
+            calculate();
+        });
+    })();
+})();
+
 /* Calculation */
 function calculate() {
     if(selectedOperator !== '' && modifiedSecondValue) { // Normal calculation when operator and values have been chosen
@@ -188,13 +230,6 @@ function resetLastValues() { // Resets saved values used in repeated equal calcu
 /* DOM constants */
 const calculationText = document.querySelector('.calculation-text');
 const outputText = document.querySelector('.output-text');
-const buttonClear = document.querySelector('#C');
-const buttonDecimal = document.querySelector('#decimal');
-const buttonInverse = document.querySelector('#inverse');
-const buttonBackspace = document.querySelector('#backspace');
-const buttonNumbers = document.querySelectorAll('.number');
-const buttonOperators = document.querySelectorAll('.operator');
-const buttonEquals = document.querySelector('#equals');
 
 
 
@@ -209,36 +244,3 @@ let selectedOperator = '';
 
 let lastCalculationValue = 0;       // Needed for repeated equal presses
 let lastCalculationOperator = '';
-
-
-
-/* Event listeners */
-buttonClear.addEventListener('click', () => resetAll());
-
-buttonDecimal.addEventListener('click', () => addDecimalSignToOutput());
-
-buttonInverse.addEventListener('click', () => {
-    resetLastValues();
-    inverseCurrentNumber();
-});
-
-buttonBackspace.addEventListener('click', () => removeLastCharFromOutput());
-
-buttonNumbers.forEach(number => {
-    number.addEventListener('click', () => {
-        resetLastValues();
-        addNumberToOutput(number.textContent);
-    });
-});
-
-buttonOperators.forEach(operator => {
-    operator.addEventListener('click', () => {
-        resetLastValues();
-        selectOperator(operator.textContent);
-    });
-});
-
-buttonEquals.addEventListener('click', () => {
-    equalsPressed = true;
-    calculate();
-});
