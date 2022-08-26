@@ -89,6 +89,18 @@ const display = (() => {
         _updateOutputTextFontSize();
     }
 
+    const addNumber = (number) => {
+        if(_outputText.textContent === '0') {                        // Replaces a '0'
+            setOutputText(number);
+        } else if(!modifiedFirstValue && !modifiedSecondValue) {    // If the change is the first that happens, it will replace the text
+            setOutputText(number);
+        } else if(operator.getCurrentOperator() !== '' && secondValue === 0) {   // Replaces a reset secondValue when an operator has been chosen
+            setOutputText(number);
+        } else {                                                    // Will normally add a value
+            setOutputText(_outputText.textContent + number);
+        }
+    }
+
     const addDecimalSign = () => {
         if(!_outputText.textContent.match(/[.]/)) _outputText.textContent += '.'; // Only adds if there isn't already a '.'
     }
@@ -119,6 +131,7 @@ const display = (() => {
         getOutputText,
         setCalculationText,
         setOutputText,
+        addNumber,
         addDecimalSign,
         removeLastChar,
         resetText
@@ -152,7 +165,7 @@ const buttons = (() => { // Button module
         _buttonNumbers.forEach(number => {
             number.addEventListener('click', () => {
                 resetLastValues();
-                addNumberToOutput(number.textContent);
+                display.addNumber(number.textContent);
                 updateValues();
             });
         });
@@ -196,19 +209,6 @@ function calculationUpdates() {
     modifiedFirstValue = false;
     modifiedSecondValue = false;
     operator.resetCurrentOperator()
-}
-
-/* Changing output */
-function addNumberToOutput(number) {
-    if(display.getOutputText() === '0') {                        // Replaces a '0'
-        display.setOutputText(number);
-    } else if(!modifiedFirstValue && !modifiedSecondValue) {    // If the change is the first that happens, it will replace the text
-        display.setOutputText(number);
-    } else if(operator.getCurrentOperator() !== '' && secondValue === 0) {   // Replaces a reset secondValue when an operator has been chosen
-        display.setOutputText(number);
-    } else {                                                    // Will normally add a value
-        display.setOutputText(display.getOutputText() + number);
-    }
 }
 
 /* Updates */
