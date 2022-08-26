@@ -90,33 +90,33 @@ const display = (() => {
     }
 
     const addNumber = (number) => {
-        if(_outputText.textContent === '0') {                        // Replaces a '0'
+        if(getOutputText() === '0') {                        // Replaces a '0'
             setOutputText(number);
         } else if(!modifiedFirstValue && !modifiedSecondValue) {    // If the change is the first that happens, it will replace the text
             setOutputText(number);
         } else if(operator.getCurrentOperator() !== '' && secondValue === 0) {   // Replaces a reset secondValue when an operator has been chosen
             setOutputText(number);
         } else {                                                    // Will normally add a value
-            setOutputText(_outputText.textContent + number);
+            setOutputText(getOutputText() + number);
         }
     }
 
     const addDecimalSign = () => {
-        if(!_outputText.textContent.match(/[.]/)) _outputText.textContent += '.'; // Only adds if there isn't already a '.'
+        if(!getOutputText().match(/[.]/)) setOutputText(getOutputText() + '.'); // Only adds if there isn't already a '.'
     }
 
     const removeLastChar = () => {
-        if(_outputText.textContent !== 0) display.setOutputText(_outputText.textContent.slice(0, -1)); // Removes last char
+        if(getOutputText() !== 0) setOutputText(getOutputText.slice(0, -1)); // Removes last char
     }
 
     const _updateCalculationTextFontSize = () => { // Dynamically change font size to fit window
-        const length = _calculationText.textContent.length;
+        const length = getCalculationText().length;
         const fontSize = (18 * 33 / length) + 'px';
         _calculationText.style.fontSize = (length <= 33) ? '18px' : fontSize;
     }
 
     const _updateOutputTextFontSize = () => { // Dynamically change font size to fit window
-        const length = _outputText.textContent.length;
+        const length = getOutputText().length;
         const fontSize = (50 * 12 / length) + 'px';
         _outputText.style.fontSize = (length <= 12) ? '50px' : fontSize;
     }
