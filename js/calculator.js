@@ -27,6 +27,42 @@ const operator = (() => { // Operator module
     }
 })();
 
+const display = (() => {
+    const _calculationText = document.querySelector('.calculation-text');
+    const _outputText = document.querySelector('.output-text');
+
+    const getCalculationText = () => _calculationText.textContent;
+    const getOutputText = () => _outputText.textContent;
+
+    const setCalculationText = (text) => {
+        _calculationText.textContent = text;
+        _updateCalculationTextFontSize();
+    }
+    const setOutputText = (text) => {
+        _outputText.textContent = text;
+        _updateOutputTextFontSize();
+    }
+
+    const _updateCalculationTextFontSize = () => { // Dynamically change font size to fit window
+        const length = _calculationText.textContent.length;
+        const fontSize = (18 * 33 / length) + 'px';
+        _calculationText.style.fontSize = (length <= 33) ? '18px' : fontSize;
+    }
+
+    const _updateOutputTextFontSize = () => { // Dynamically change font size to fit window
+        const length = _outputText.textContent.length;
+        const fontSize = (50 * 12 / length) + 'px';
+        _outputText.style.fontSize = (length <= 12) ? '50px' : fontSize;
+    }
+
+    return {
+        getCalculationText,
+        getOutputText,
+        setCalculationText,
+        setOutputText
+    }
+})();
+
 const buttons = (() => { // Button module
     const _buttonClear = document.querySelector('#C');
     const _buttonDecimal = document.querySelector('#decimal');
@@ -72,14 +108,14 @@ const buttons = (() => { // Button module
 /* Calculation */
 function calculate() {
     if(selectedOperator !== '' && modifiedSecondValue) { // Normal calculation when operator and values have been chosen
-        outputText.textContent = operator.operate(firstValue, selectedOperator, secondValue);
+        display.setOutputText(operator.operate(firstValue, selectedOperator, secondValue));
         
         lastCalculationValue = secondValue;
         lastCalculationOperator = selectedOperator;
         
         calculationUpdates();
     } else if(lastCalculationOperator !== '') { // Repeated equal calculation
-        outputText.textContent = operator.operate(firstValue, lastCalculationOperator, lastCalculationValue);
+        display.setOutputText(operator.operate(firstValue, lastCalculationOperator, lastCalculationValue));
         
         calculationUpdates();
     }
@@ -90,14 +126,12 @@ function calculate() {
 function calculationUpdates() {
     updateCalculationText();
     
-    firstValue = outputText.textContent;
+    firstValue = display.getOutputText();
     secondValue = 0;
     modifyingFirstValue = true;
     modifiedFirstValue = false;
     modifiedSecondValue = false;
     selectedOperator = '';
-
-    updateOutputTextFontSize();
 }
 
 function selectOperator(operator) {    
@@ -120,24 +154,24 @@ function selectOperator(operator) {
 
 /* Changing output */
 function addDecimalSignToOutput() {
-    if(!outputText.textContent.match(/[.]/)) outputText.textContent += '.'; // Only adds if there isn't already a '.'
+    if(!display.getOutputText().match(/[.]/)) display.setOutputText(display.getOutputText() + '.'); // Only adds if there isn't already a '.'
 }
 
 function removeLastCharFromOutput() {
-    if(outputText.textContent !== 0)  outputText.textContent = outputText.textContent.slice(0, -1); // Removes last char
-    if(outputText.textContent === '') outputText.textContent = '0';                                 // If nothing is left, add a '0'
+    if(display.getOutputText() !== 0)  display.setOutputText(display.getOutputText().slice(0, -1)); // Removes last char
+    if(display.getOutputText() === '') display.setOutputText('0');                                 // If nothing is left, add a '0'
     updateValues();
 }
 
 function addNumberToOutput(number) {
-    if(outputText.textContent === '0') {                        // Replaces a '0'
-        outputText.textContent = number;
+    if(display.getOutputText() === '0') {                        // Replaces a '0'
+        display.setOutputText(number);
     } else if(!modifiedFirstValue && !modifiedSecondValue) {    // If the change is the first that happens, it will replace the text
-        outputText.textContent = number;
+        display.setOutputText(number);
     } else if(selectedOperator !== '' && secondValue === 0) {   // Replaces a reset secondValue when an operator has been chosen
-        outputText.textContent = number;
+        display.setOutputText(number);
     } else {                                                    // Will normally add a value
-        outputText.textContent += number;
+        display.setOutputText(display.getOutputText() + number);
     }
     updateValues();
 }
@@ -147,59 +181,42 @@ function addNumberToOutput(number) {
 /* Updates */
 function updateValues() {
     if(modifyingFirstValue) {
-        firstValue = outputText.textContent;
+        firstValue = display.getOutputText();
         modifiedFirstValue = true;
     } else {
-        secondValue = outputText.textContent;
+        secondValue = display.getOutputText();
         modifiedSecondValue = true;
     }
-    updateOutputTextFontSize();
     console.log(firstValue + ' ' + secondValue);
 }
 
-function updateCalculationText() {
+const updateCalculationText = () => {
     if(equalsPressed) {
-        calculationText.textContent = `${firstValue} ${lastCalculationOperator} ${lastCalculationValue} =`
+        display.setCalculationText(`${firstValue} ${lastCalculationOperator} ${lastCalculationValue} =`);
         equalsPressed = false;
     } else if(selectedOperator !== '' && modifiedSecondValue) {
-        calculationText.textContent = `${firstValue} ${selectedOperator}`;
+        display.setCalculationText(`${firstValue} ${selectedOperator}`);
     } else {
-        calculationText.textContent = `${firstValue} ${selectedOperator}`;
+        display.setCalculationText(`${firstValue} ${selectedOperator}`);
     }
-
-    updateCalculationTextFontSize();
 }
 
 function inverseCurrentNumber() {
     if(modifyingFirstValue) {                                   // Modifying the first value
         if(!modifiedFirstValue && !modifiedSecondValue) {       // Clears calculationText if a calculated value is inversed
-            calculationText.textContent = '';
+            display.setCalculationText('');
         }
 
         firstValue = -firstValue;
         modifiedFirstValue = true;
-        outputText.textContent = firstValue;
+        display.setOutputText(firstValue);
     } else if (!modifyingFirstValue && modifiedSecondValue){    // Modifying the second value, when the second value has been assigned
         secondValue = -secondValue;
         modifiedSecondValue = true;
-        outputText.textContent = secondValue;
+        display.setOutputText(secondValue);
     } 
 
     resetLastValues();
-}
-
-
-/* Variable font sizes */
-function updateOutputTextFontSize() { // Dynamically change font size to fit window
-    const length = outputText.textContent.length;
-    const fontSize = (50 * 12 / length) + 'px';
-    outputText.style.fontSize = (length <= 12) ? '50px' : fontSize;
-}
-
-function updateCalculationTextFontSize() { // Dynamically change font size to fit window
-    const length = calculationText.textContent.length;
-    const fontSize = (18 * 33 / length) + 'px';
-    calculationText.style.fontSize = (length <= 33) ? '18px' : fontSize;
 }
 
 
@@ -214,9 +231,8 @@ function resetAll() {
     selectedOperator = '';
     lastCalculationValue = 0;
     lastCalculationOperator = '';
-    calculationText.textContent = '';
-    outputText.textContent = '0';
-    updateOutputTextFontSize();
+    display.setCalculationText('');
+    display.setOutputText('0');
 }
 
 function resetLastValues() { // Resets saved values used in repeated equal calculations
@@ -224,14 +240,6 @@ function resetLastValues() { // Resets saved values used in repeated equal calcu
     lastCalculationValue = 0;
     equalsPressed = false;
 }
-
-
-
-/* DOM constants */
-const calculationText = document.querySelector('.calculation-text');
-const outputText = document.querySelector('.output-text');
-
-
 
 /* Variables */
 let firstValue = 0;
