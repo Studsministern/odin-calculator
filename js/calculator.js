@@ -1,54 +1,43 @@
-/* Operator functions */
-function operate(number1, operator, number2) {
-    switch(operator) {
-        case '+':
-            return add(number1, number2);
-        case '-':
-            return subtract(number1, number2);
-        case 'x':
-            return multiply(number1, number2);
-        case '/':
-            return divide(number1, number2);
-        case '%':
-            return modulo(number1, number2);
-        default:
-            return 'ERROR: Wrong operator';
+const operator = (() => { // Operator module
+    const operate = (number1, number2, operator) => {
+        switch(operator) {
+            case '+':
+                return _add(number1, number2);
+            case '-':
+                return _subtract(number1, number2);
+            case 'x':
+                return _multiply(number1, number2);
+            case '/':
+                return _divide(number1, number2);
+            case '%':
+                return _modulo(number1, number2);
+            default:
+                return 'ERROR: Wrong operator';
+        }
     }
-}
 
-function add(number1, number2) {
-    return +number1 + +number2;
-}
+    const _add      = (number1, number2) => +number1 + +number2;
+    const _subtract = (number1, number2) => +number1 - +number2;
+    const _multiply = (number1, number2) => +number1 * +number2;
+    const _divide   = (number1, number2) => +number1 / +number2;
+    const _modulo   = (number1, number2) => +number1 % +number2;
 
-function subtract(number1, number2) {
-    return +number1 - +number2;
-}
-
-function multiply(number1, number2) {
-    return +number1 * +number2;
-}
-
-function divide(number1, number2) {
-    return +number1 / +number2;
-}
-
-function modulo(number1, number2) {
-    return +number1 % +number2;
-}
-
-
+    return {
+        operate
+    }
+})();
 
 /* Calculation */
 function calculate() {
     if(selectedOperator !== '' && modifiedSecondValue) { // Normal calculation when operator and values have been chosen
-        outputText.textContent = operate(firstValue, selectedOperator, secondValue);
+        outputText.textContent = operator.operate(firstValue, selectedOperator, secondValue);
         
         lastCalculationValue = secondValue;
         lastCalculationOperator = selectedOperator;
         
         calculationUpdates();
     } else if(lastCalculationOperator !== '') { // Repeated equal calculation
-        outputText.textContent = operate(firstValue, lastCalculationOperator, lastCalculationValue);
+        outputText.textContent = operator.operate(firstValue, lastCalculationOperator, lastCalculationValue);
         
         calculationUpdates();
     }
