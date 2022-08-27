@@ -176,7 +176,6 @@ const buttons = (() => { // Button module
         });
 
         _buttonEquals.addEventListener('click', () => {
-            calculator.setEqualsPressed(true);
             calculator.calculate();
         });
     })();
@@ -188,7 +187,6 @@ const calculator = (() => {
     let _modifyingFirstValue = true;
     let _modifiedFirstValue = false;
     let _modifiedSecondValue = false;
-    let _equalsPressed = false;
     let _chainValue = 0;       // Needed for repeated equal presses
 
     const getFirstValue          = () => _firstValue;
@@ -199,10 +197,6 @@ const calculator = (() => {
     const setModifyingFirstValue = (bool) => {
         _modifyingFirstValue = bool;
     }
-
-    const setEqualsPressed = (bool) => {
-        _equalsPressed = bool;
-    } 
 
     const calculate = () => {
         if(operator.getCurrentOperator() !== '' && _modifiedSecondValue) { // Normal calculation when operator and values have been chosen
@@ -270,7 +264,6 @@ const calculator = (() => {
 
     const resetChainValues = () => { // Resets saved values used in repeated equal calculations
         _chainValue = 0;
-        _equalsPressed = false;
         operator.resetChainOperator();
     }
 
@@ -283,7 +276,6 @@ const calculator = (() => {
         setModifyingFirstValue,
         //setModifiedFirstValue,
         //setModifiedSecondValue,
-        setEqualsPressed,
         calculate,
         updateValues,
         inverseCurrentValue,
