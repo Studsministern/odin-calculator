@@ -12,15 +12,15 @@ const operator = (() => { // Operator module
     const switchOperator = (operator) => {    
         if(currentOperator && calculator.getModifiedSecondValue()) { // Chained operators
             calculator.calculate();
-            calculator.setModifyingFirstValue(false);
             currentOperator = operator;
-            calculator.updateCalculationText();
+            calculator.setModifyingFirstValue(false);
+            display.setCalculationText(`${calculator.getFirstValue()} ${currentOperator}`);
         }
         
         if(currentOperator !== operator) { // Update if a new operator is clicked
             currentOperator = operator;
-            calculator.updateCalculationText();
             calculator.setModifyingFirstValue(false);
+            display.setCalculationText(`${calculator.getFirstValue()} ${currentOperator}`);
         }
     }
 
@@ -193,6 +193,7 @@ const calculator = (() => {
     let _equalsPressed = false;
     let _chainValue = 0;       // Needed for repeated equal presses
 
+    const getFirstValue          = () => _firstValue;
     const getSecondValue         = () => _secondValue;
     const getModifiedFirstValue  = () => _modifiedFirstValue;
     const getModifiedSecondValue = () => _modifiedSecondValue;
@@ -221,7 +222,7 @@ const calculator = (() => {
     }
 
     const _calculationUpdates = () => {
-        updateCalculationText();
+        display.setCalculationText(`${_firstValue} ${operator.getChainOperator()} ${_chainValue} =`);
         
         _firstValue = display.getOutputText();
         _secondValue = 0;
@@ -229,17 +230,6 @@ const calculator = (() => {
         _modifiedFirstValue = false;
         _modifiedSecondValue = false;
         operator.resetCurrentOperator()
-    }
-
-    const updateCalculationText = () => {
-        if(_equalsPressed) {
-            display.setCalculationText(`${_firstValue} ${operator.getChainOperator()} ${_chainValue} =`);
-            _equalsPressed = false;
-        } else if(operator.getCurrentOperator() !== '' && _modifiedSecondValue) {
-            display.setCalculationText(`${_firstValue} ${operator.getCurrentOperator()}`);
-        } else {
-            display.setCalculationText(`${_firstValue} ${operator.getCurrentOperator()}`);
-        }
     }
 
     const updateValues = () => {
@@ -287,7 +277,7 @@ const calculator = (() => {
     }
 
     return {
-        //getFirstValue,
+        getFirstValue,
         getSecondValue,
         //getModifyingFirstValue,
         getModifiedFirstValue,
@@ -297,7 +287,6 @@ const calculator = (() => {
         //setModifiedSecondValue,
         setEqualsPressed,
         calculate,
-        updateCalculationText,
         updateValues,
         inverseCurrentValue,
         resetAll,
