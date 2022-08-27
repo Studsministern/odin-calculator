@@ -10,18 +10,16 @@ const operator = (() => { // Operator module
     }
 
     const switchOperator = (operator) => {    
-        if(currentOperator && calculator.getModifiedSecondValue()) { // Chained operators
+        if(calculator.getModifiedSecondValue()) { // Chained operators
             calculator.calculate();
-            currentOperator = operator;
-            calculator.setModifyingFirstValue(false);
-            display.setCalculationText(`${calculator.getFirstValue()} ${currentOperator}`);
         }
-        
-        if(currentOperator !== operator) { // Update if a new operator is clicked
-            currentOperator = operator;
-            calculator.setModifyingFirstValue(false);
-            display.setCalculationText(`${calculator.getFirstValue()} ${currentOperator}`);
-        }
+
+        // Pressing the operator button will always assign a new operator, make sure the 
+        // second value will be modified in the future, and changing the calculationText 
+        // so it displays the first value and the currentOperator
+        currentOperator = operator;
+        calculator.setModifyingFirstValue(false);
+        display.setCalculationText(`${calculator.getFirstValue()} ${currentOperator}`);
     }
 
     const operateEquals = (number1, number2) => _operate(number1, currentOperator, number2);
