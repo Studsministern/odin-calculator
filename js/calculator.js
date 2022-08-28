@@ -82,7 +82,7 @@ const display = (() => {
     }
 
     const setOutputText = (text) => {
-        if(text === '') _outputText.textcontent = '0'; // The output should never be empty
+        if(text === '') _outputText.textContent = '0'; // The output should never be empty
         else            _outputText.textContent = text;
         _updateOutputTextFontSize();
     }
