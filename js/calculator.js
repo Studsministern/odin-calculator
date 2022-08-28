@@ -104,7 +104,7 @@ const display = (() => {
     }
 
     const removeLastChar = () => {
-        if(getOutputText() !== 0) setOutputText(getOutputText.slice(0, -1)); // Removes last char
+        if(getOutputText() !== 0) setOutputText(getOutputText().slice(0, -1)); // Removes last char
     }
 
     const _updateCalculationTextFontSize = () => { // Dynamically change font size to fit window
