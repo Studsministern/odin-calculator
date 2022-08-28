@@ -199,21 +199,15 @@ const calculator = (() => {
     }
 
     const calculate = () => {
-        if(operator.getCurrentOperator() !== '' && _modifiedSecondValue) { // Normal calculation when operator and values have been chosen
+        if(_modifiedSecondValue) { // Normal calculation when operator and values have been chosen
             display.setOutputText(operator.operateEquals(_firstValue, _secondValue));
             
             _chainValue = _secondValue;
             operator.updateChainOperator();
-            
-            _calculationUpdates();
-        } else if(operator.getChainOperator() !== '') { // Repeated equal calculation
-            display.setOutputText(operator.operateChain(_firstValue, _chainValue));
-            
-            _calculationUpdates();
+        } else { // Repeated equal calculation
+            display.setOutputText(operator.operateChain(_firstValue, _chainValue));   
         }
-    }
-
-    const _calculationUpdates = () => {
+        
         display.setCalculationText(`${_firstValue} ${operator.getChainOperator()} ${_chainValue} =`);
         
         _firstValue = display.getOutputText();
